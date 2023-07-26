@@ -32,6 +32,7 @@ warnings.filterwarnings('ignore', category=UserWarning, module='torchvision')
 
 def parse_args() -> None:
     signal.signal(signal.SIGINT, lambda signal_number, frame: destroy())
+    # 解析参数
     program = argparse.ArgumentParser(formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=100))
     program.add_argument('-s', '--source', help='select an source image', dest='source_path')
     program.add_argument('-t', '--target', help='select an target image or video', dest='target_path')
@@ -54,7 +55,7 @@ def parse_args() -> None:
     program.add_argument('-v', '--version', action='version', version=f'{roop.metadata.name} {roop.metadata.version}')
 
     args = program.parse_args()
-
+    # 设置参数
     roop.globals.source_path = args.source_path
     roop.globals.target_path = args.target_path
     roop.globals.output_path = normalize_output_path(roop.globals.source_path, roop.globals.target_path, args.output_path)  # type: ignore
@@ -76,10 +77,16 @@ def parse_args() -> None:
     roop.globals.execution_threads = args.execution_threads
 
 
+"""
+    编码 线程池
+"""
 def encode_execution_providers(execution_providers: List[str]) -> List[str]:
     return [execution_provider.replace('ExecutionProvider', '').lower() for execution_provider in execution_providers]
 
 
+"""
+    解码线程池
+"""
 def decode_execution_providers(execution_providers: List[str]) -> List[str]:
     return [provider for provider, encoded_execution_provider in zip(onnxruntime.get_available_providers(), encode_execution_providers(onnxruntime.get_available_providers()))
             if any(execution_provider in encoded_execution_provider for execution_provider in execution_providers)]
@@ -115,7 +122,9 @@ def limit_resources() -> None:
             import resource
             resource.setrlimit(resource.RLIMIT_DATA, (memory, memory))
 
-
+"""
+    预检查，检测系统版本和FFmpeg是否安装
+"""
 def pre_check() -> bool:
     if sys.version_info < (3, 9):
         update_status('Python version is not supported - please upgrade to 3.9 or higher.')
@@ -126,12 +135,18 @@ def pre_check() -> bool:
     return True
 
 
+"""
+    UI层提示
+"""
 def update_status(message: str, scope: str = 'ROOP.CORE') -> None:
     print(f'[{scope}] {message}')
     if not roop.globals.headless:
         ui.update_status(message)
 
 
+"""
+    开始按钮
+"""
 def start() -> None:
     for frame_processor in get_frame_processors_modules(roop.globals.frame_processors):
         if not frame_processor.pre_start():
