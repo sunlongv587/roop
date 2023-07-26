@@ -133,15 +133,24 @@ def is_video(video_path: str) -> bool:
     return False
 
 
+"""
+    根据条件下载文件，不存在才下载
+"""
 def conditional_download(download_directory_path: str, urls: List[str]) -> None:
     if not os.path.exists(download_directory_path):
         os.makedirs(download_directory_path)
     for url in urls:
+        # 下载文件存放路径，basename 是去url的最后一级path，也就是文件名
         download_file_path = os.path.join(download_directory_path, os.path.basename(url))
+        # 文件不存在就下载
         if not os.path.exists(download_file_path):
+            # 开始下载
             request = urllib.request.urlopen(url)  # type: ignore[attr-defined]
+            # 获取文件大小
             total = int(request.headers.get('Content-Length', 0))
+            # 下载进度条
             with tqdm(total=total, desc='Downloading', unit='B', unit_scale=True, unit_divisor=1024) as progress:
+                # 下载
                 urllib.request.urlretrieve(url, download_file_path, reporthook=lambda count, block_size, total_size: progress.update(block_size))  # type: ignore[attr-defined]
 
 

@@ -249,13 +249,21 @@ def init_preview() -> None:
 
 def update_preview(frame_number: int = 0) -> None:
     if roop.globals.source_path and roop.globals.target_path:
+        # 采集视频帧
         temp_frame = get_video_frame(roop.globals.target_path, frame_number)
+        # 对内容进行鉴黄
         if predict_frame(temp_frame):
+            # 退出程序
             sys.exit()
+        # 从 源文件路径中 解析 人脸
         source_face = get_one_face(cv2.imread(roop.globals.source_path))
+        # 参考人脸
         if not get_face_reference():
+            # 参考帧
             reference_frame = get_video_frame(roop.globals.target_path, roop.globals.reference_frame_number)
+            # 从参考帧中解析人脸
             reference_face = get_one_face(reference_frame, roop.globals.reference_face_position)
+            # 设置参考人脸 到全局变量
             set_face_reference(reference_face)
         else:
             reference_face = get_face_reference()

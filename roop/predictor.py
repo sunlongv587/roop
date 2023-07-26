@@ -16,6 +16,7 @@ def get_predictor() -> Model:
 
     with THREAD_LOCK:
         if PREDICTOR is None:
+            # 加载 鉴黄 模型 opennsfw2
             PREDICTOR = opennsfw2.make_open_nsfw_model()
     return PREDICTOR
 

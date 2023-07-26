@@ -69,3 +69,17 @@ Using the `-s/--source`, `-t/--target` and `-o/--output` argument will run the p
 - [ffmpeg](https://ffmpeg.org/): for making video related operations easy
 - [deepinsight](https://github.com/deepinsight): for their [insightface](https://github.com/deepinsight/insightface) project which provided a well-made library and models.
 - and all developers behind libraries used in this project.
+
+
+## Roop-colab
+
+colab repository: https://github.com/dream80/roop_colab
+
+> 如果第五步没有成功，大概率是被监测到涩涩了。
+在左边目文件管理里面找到roop/core.py，双击打开找到 predict_video_frames,predict_image相关的行和quit()函数删掉就可以了。
+
+- opennsfw2 鉴黄模型 
+- insightface 人脸处理库，人脸关键点提取，检测，
+- tqdm 进度条
+- gfpgan 盲人脸部恢复
+- 
