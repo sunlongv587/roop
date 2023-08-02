@@ -12,7 +12,9 @@ from tqdm import tqdm
 
 import roop.globals
 
+# 临时目录名
 TEMP_DIRECTORY = 'temp'
+# 临时视频文件名
 TEMP_VIDEO_FILE = 'temp.mp4'
 
 # monkey patch ssl for mac
